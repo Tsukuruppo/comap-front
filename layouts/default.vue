@@ -1,13 +1,17 @@
 <template lang="pug">
-v-app(dark)
-  nuxt
+v-app
+  Nuxt
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
-@Component({})
-export default class Default extends Vue {}
-</script>
-
 <style lang="scss" scoped>
+html,
+body,
+#__nuxt,
+#__layout,
+#__layout > div {
+  min-height: 100vh;
+}
+body {
+  margin: 0;
+}
 </style
