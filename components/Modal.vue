@@ -42,7 +42,13 @@ div
 import { Component, Vue } from 'nuxt-property-decorator'
 import { mdiBorderColor } from '@mdi/js'
 
-@Component({})
+@Component({
+  asyncData({ $config }) {
+    console.log(`appUrl${console.log}`)
+    const appUrl = $config.appUrl
+    return { appUrl }
+  },
+})
 export default class Modal extends Vue {
   svgPath = mdiBorderColor
   dialog: boolean = false
@@ -52,6 +58,7 @@ export default class Modal extends Vue {
   title: string | Blob = ''
   errorDialog = false
   errorText = ''
+  appUrl = ''
 
   closeModal() {
     this.title = ''
@@ -101,9 +108,8 @@ export default class Modal extends Vue {
         'Content-Type': 'multipart/form-data',
       },
     }
-
     this.$axios
-      .post('url', { formData, config })
+      .post(this.appUrl, { formData, config })
       .then(() => {
         this.closeModal()
       })

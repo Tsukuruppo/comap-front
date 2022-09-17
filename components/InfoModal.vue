@@ -19,6 +19,7 @@ import { mdiInformation } from '@mdi/js'
 
 @Component({
   asyncData({ $config }) {
+    console.log('tokennnfakfkadhfkjanfkladfnglka')
     const accessToken = $config.accessToken
     return { accessToken }
   },
