@@ -9,7 +9,8 @@
         | 地図情報と結び付いた、リアルなお困りごとを発信することで、そのスポットを訪れた人が、あなたのお困りごと情報を読み、疑似体験することができます。<br/>
         | 使い方は簡単です。左上の投稿フォームから、お困りごと情報を記載して送信するだけ。<br/>
         | タイトルやタグ、画像をつけるとより多くの人に伝わりやすくなります。<br/>
-        | 投稿した内容は、COMAPアプリと連携し、マップに表示されます。
+        | 投稿した内容は、COMAPアプリと連携し、マップに表示されます。<br/>
+        | まずは右下のボタンから現在地を取得してください。
       v-btn.mb-3(@click='dialogClose', outlined, color='red lighten-2') OK
 </template>
 
@@ -25,7 +26,7 @@ import { mdiInformation } from '@mdi/js'
 })
 export default class InfoModal extends Vue {
   svgPath = mdiInformation
-  dialog: boolean = false
+  dialog: boolean = true
 
   dialogOpen() {
     this.dialog = true

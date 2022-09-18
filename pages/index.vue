@@ -29,7 +29,7 @@ export default class Index extends Vue {
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [139.7671, 35.6812],
-      zoom: 9,
+      zoom: 6,
     })
 
     this.map.addControl(

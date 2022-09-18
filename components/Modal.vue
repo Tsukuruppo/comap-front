@@ -91,7 +91,7 @@ export default class Modal extends Vue {
   errorText = ''
   successDialog = false
   loadFlag = false
-  item = ['a', 'b', 'c']
+  item = ['視覚', '聴覚', '車椅子', '松葉杖']
 
   closeModal() {
     this.title = ''
@@ -104,13 +104,15 @@ export default class Modal extends Vue {
 
   getPosition() {
     this.loadFlag = true
-    navigator.geolocation.getCurrentPosition(
-      this.sendData,
-      () => this.errorFunc('位置情報が取得できませんでした'),
-      {
-        enableHighAccuracy: true,
-      },
-    )
+    this.successDialog = true
+    this.closeModal()
+    // navigator.geolocation.getCurrentPosition(
+    //   this.sendData,
+    //   () => this.errorFunc('位置情報が取得できませんでした'),
+    //   {
+    //     enableHighAccuracy: true,
+    //   },
+    // )
   }
 
   errorFunc(text: string) {
