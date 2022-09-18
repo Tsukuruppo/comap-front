@@ -104,15 +104,13 @@ export default class Modal extends Vue {
 
   getPosition() {
     this.loadFlag = true
-    this.successDialog = true
-    this.closeModal()
-    // navigator.geolocation.getCurrentPosition(
-    //   this.sendData,
-    //   () => this.errorFunc('位置情報が取得できませんでした'),
-    //   {
-    //     enableHighAccuracy: true,
-    //   },
-    // )
+    navigator.geolocation.getCurrentPosition(
+      this.sendData,
+      () => this.errorFunc('位置情報が取得できませんでした'),
+      {
+        enableHighAccuracy: true,
+      },
+    )
   }
 
   errorFunc(text: string) {
@@ -148,7 +146,6 @@ export default class Modal extends Vue {
     }
 
     if (this.appUrl) {
-      console.log(this.appUrl, formData)
       this.$axios
         .post(this.appUrl as string, { formData, config })
         .then(() => {
