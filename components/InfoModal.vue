@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+.icon-wrapper
   v-icon.icon(role='img', @click='dialogOpen') {{ svgPath }}
   v-dialog(v-model='dialog', persistent, max-width='600px')
     v-card(align='center')
@@ -39,9 +39,12 @@ export default class InfoModal extends Vue {
 
 <style lang="scss" scoped>
 .icon {
+  color: black;
+}
+
+.icon-wrapper {
   position: absolute;
   top: 8px;
   right: 8px;
-  color: black;
 }
 </style>
