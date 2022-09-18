@@ -70,5 +70,7 @@ export default {
 
   privateRuntimeConfig: {
     accessToken: process.env.ACCESS_TOKEN,
+    basicAuth: process.env.BASIC_AUTH,
+    appUrl: process.env.APP_URL,
   },
 }

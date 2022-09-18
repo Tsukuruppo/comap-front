@@ -1,7 +1,7 @@
 <template lang="pug">
 .wrapper
   #map.map
-  Modal
+  Modal(:basicAuth='basicAuth', :appUrl='appUrl')
   InfoModal
 </template>
 
@@ -14,7 +14,9 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 @Component({
   asyncData({ $config }) {
     const accessToken = $config.accessToken
-    return { accessToken }
+    const basicAuth = $config.basicAuth
+    const appUrl = $config.appUrl
+    return { accessToken, basicAuth, appUrl }
   },
 })
 export default class Index extends Vue {
