@@ -11,23 +11,43 @@ div
         v-container
           v-row
             v-col(cols='12')
-              v-text-field(label='タイトル*', required, v-model='title')
+              v-text-field(
+                label='タイトル*',
+                required,
+                v-model='title',
+                :disabled='loadFlag'
+              )
             v-col(cols='12')
-              v-text-field(label='お困り事情報*', required, v-model='description')
+              v-text-field(
+                label='お困り事情報*',
+                required,
+                v-model='description',
+                :disabled='loadFlag'
+              )
             v-col(cols='12')
-              v-autocomplete(
-                :items='[0, 1, 2, 3, 4, 5]',
+              v-select(
+                :items='item',
                 label='タグ',
                 v-model='tag',
-                multiple
+                :disabled='loadFlag'
               )
-            v-file-input(cols='12', v-model='image')
+            v-file-input(cols='12', v-model='image', :disabled='loadFlag')
         small *indicates required field
       v-card-actions
         v-spacer
-        v-btn(color='blue darken-1', text, @click='closeModal')
+        v-btn(
+          color='blue darken-1',
+          text,
+          @click='closeModal',
+          :disabled='loadFlag'
+        )
           | Close
-        v-btn(color='blue darken-1', text, @click='getPosition')
+        v-btn(
+          color='blue darken-1',
+          text,
+          @click='getPosition',
+          :disabled='loadFlag'
+        )
           | Send
   v-dialog(v-model='errorDialog', persistent, width='360')
     v-card(align='center')
@@ -36,14 +56,31 @@ div
       v-card-text
         | {{ errorText }}
       v-btn.mb-3(@click='errorDialogClose', outlined, color='red lighten-2') OK
+  v-dialog(v-model='successDialog', persistent, width='360')
+    v-card(align='center')
+      v-card-title.justify-center
+        | 成功
+      v-card-text
+        | 投稿しました
+      v-btn.mb-3(
+        @click='successDialog = false',
+        outlined,
+        color='green lighten-2'
+      ) OK
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Component, Prop, Vue } from 'nuxt-property-decorator'
 import { mdiBorderColor } from '@mdi/js'
 
 @Component({})
 export default class Modal extends Vue {
+  @Prop({ type: String, required: true })
+  basicAuth: String | undefined
+
+  @Prop({ type: String, required: true })
+  appUrl: String | undefined
+
   svgPath = mdiBorderColor
   dialog: boolean = false
   image = []
@@ -52,6 +89,9 @@ export default class Modal extends Vue {
   title: string | Blob = ''
   errorDialog = false
   errorText = ''
+  successDialog = false
+  loadFlag = false
+  item = ['a', 'b', 'c']
 
   closeModal() {
     this.title = ''
@@ -63,6 +103,7 @@ export default class Modal extends Vue {
   }
 
   getPosition() {
+    this.loadFlag = true
     navigator.geolocation.getCurrentPosition(
       this.sendData,
       () => this.errorFunc('位置情報が取得できませんでした'),
@@ -75,6 +116,7 @@ export default class Modal extends Vue {
   errorFunc(text: string) {
     this.errorText = text
     this.errorDialog = true
+    this.loadFlag = false
   }
 
   errorDialogClose() {
@@ -86,30 +128,37 @@ export default class Modal extends Vue {
     if (this.description === '') this.errorFunc('説明を入力してください')
 
     const p = data.coords
-    const formData = new FormData()
-    formData.append('x', '' + p.latitude)
-    formData.append('y', '' + p.longitude)
-    formData.append('id', '0')
-    formData.append('user_id', '0')
-    formData.append('image', this.image[0])
-    formData.append('title', this.title)
-    formData.append('description', this.description)
-    formData.append('tag', this.tag)
+
+    const formData = {
+      lat: p.latitude,
+      lon: p.longitude,
+      title: this.title,
+      message: this.description,
+      user_id: 1,
+      handicap_id: this.item.findIndex((e) => e === this.tag),
+    }
 
     const config = {
       header: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.basicAuth}`,
       },
     }
 
-    this.$axios
-      .post('url', { formData, config })
-      .then(() => {
-        this.closeModal()
-      })
-      .catch(() => {
-        this.errorFunc('送信できませんでした')
-      })
+    if (this.appUrl) {
+      console.log(this.appUrl, formData)
+      this.$axios
+        .post(this.appUrl as string, { formData, config })
+        .then(() => {
+          this.successDialog = true
+          this.closeModal()
+        })
+        .catch(() => {
+          this.errorFunc('送信できませんでした')
+        })
+    } else {
+      this.errorFunc('送信できませんでした')
+    }
   }
 }
 </script>
